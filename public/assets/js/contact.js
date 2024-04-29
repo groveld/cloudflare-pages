@@ -14,6 +14,10 @@ function submitForm(event) {
     // Get the form data
     const formData = new FormData(event.target);
 
+    document
+    .querySelectorAll("input, textarea")
+    .forEach((input) => (input.disabled = true));
+
     // Change the button text to "Sending message..."
     submitButton.textContent = "Sending message...";
     submitButton.className = "btn btn-lg btn-primary disabled";
