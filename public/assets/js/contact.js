@@ -32,21 +32,11 @@ function submitForm(event) {
         } else {
             // Change the button text to "Error sending message"
             submitButton.textContent = "Error sending message";
-
-            // Reset the button text after 5 seconds
-            setTimeout(() => {
-                submitButton.textContent = "Send message";
-            }, 5000);
         }
     })
     .catch((error) => {
         // Change the button text to "Error sending message"
         submitButton.textContent = "Error sending message";
-
-        // Reset the button text after 5 seconds
-        setTimeout(() => {
-            submitButton.textContent = "Send message";
-        }, 5000);
     });
 }
 
