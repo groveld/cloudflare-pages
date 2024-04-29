@@ -80,7 +80,7 @@ Dit is een test!
 
         <div class="d-grid">
           <button
-            class="btn btn-primary btn-lg"
+            class="btn btn-lg btn-primary"
             id="contact-form-submit"
             type="submit"
           >
@@ -134,9 +134,11 @@ Dit is een test!
               form.reset();
               // Change the button text to "Message sent!"
               submitButton.textContent = "Message sent!";
+              submitButton.classList.add("btn-success");
             } else {
               // If the request was not successful, throw an error
               submitButton.textContent = "Something went wrong!";
+              submitButton.classList.add("btn-danger");
               throw new Error();
             }
           })
