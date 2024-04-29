@@ -11,9 +11,6 @@ contactForm.addEventListener("submit", submitForm);
 function submitForm(event) {
     event.preventDefault();
 
-    // Change the button text to "Sending message..."
-    submitButton.textContent = "Sending message...";
-
     // Get the form data
     const formData = new FormData(event.target);
 
@@ -23,6 +20,9 @@ function submitForm(event) {
         body: formData,
     })
     .then((response) => {
+        // Change the button text to "Sending message..."
+        submitButton.textContent = "Sending message...";
+
         if (response.ok) {
             // Change the button text to "Message sent!"
             submitButton.textContent = "Message sent!";
