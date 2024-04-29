@@ -29,7 +29,7 @@ const handleRequest = async ({ request }) => {
   return new Response('Message sent', { status: 200 });
 }
 
-const verifyCaptcha = async (env, token, ip) => {
+const verifyCaptcha = async ({ env, token, ip }) => {
   let formData = new FormData();
   formData.append("secret", env.TURNSTILE_SECRET_KEY);
   formData.append("response", token);
@@ -45,7 +45,7 @@ const verifyCaptcha = async (env, token, ip) => {
   return outcome.success;
 }
 
-const sendEmailWithMailgun = async (env, name, email, message) => {
+const sendEmailWithMailgun = async ({ env, name, email, message }) => {
   let formData = new FormData();
   formData.append("from", env.MAILGUN_FROM);
   // formData.append('h:Reply-To' , email);
