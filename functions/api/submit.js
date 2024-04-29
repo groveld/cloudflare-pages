@@ -25,7 +25,7 @@ async function handleRequest({ request, env }) {
     return new Response('Invalid captcha', { status: 403 });
   }
 
-  await sendEmailWithMailgun();
+  await sendEmailWithMailgun(name, email, message);
 
   return new Response('Message sent', { status: 200 });
 }
@@ -46,10 +46,25 @@ async function verifyCaptcha(secret, token, ip) {
   return outcome.success;
 }
 
-async function sendEmailWithMailgun() {
-  try {
-    return new Response('Mailgun sent', { status: 200 });
-  } catch (err) {
-    return new Response('Error parsing JSON content', { status: 400 });
-  }
+async function sendEmailWithMailgun(name, email, message) {
+  let mailgunDomain = env.MAILGUN_DOMAIN;
+  let mailgunApiKey = env.MAILGUN_API_KEY;
+  let url = `https://api.mailgun.net/v3/${mailgunDomain}/messages`;
+
+  let formData = new FormData();
+  formData.append("from", 'noreply@groveld.com');
+  formData.append("to", name + ' <' + email + '>');
+  formData.append("subject", 'Message from contact form');
+  formData.append("text", message);
+
+  let result = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${btoa(`api:${mailgunApiKey}`)}`,
+    },
+    body: formData,
+  });
+
+  let outcome = await result.json();
+  return outcome.success;
 }
