@@ -11,10 +11,6 @@ contactForm.addEventListener("submit", submitForm);
 function submitForm(event) {
     event.preventDefault();
 
-    document
-        .querySelectorAll("input, textarea, button")
-        .forEach((input) => (input.disabled = true));
-
     // Change the button text to "Sending message..."
     submitButton.textContent = "Sending message...";
 
