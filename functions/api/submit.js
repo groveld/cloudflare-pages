@@ -6,7 +6,7 @@ export const onRequestPost = async (context) => {
   }
 }
 
-const handleRequest = async ({ request }) => {
+const handleRequest = async ({ request, env }) => {
   let formData = await request.formData();
   let name = formData.get('name');
   let email = formData.get('email');
@@ -18,18 +18,18 @@ const handleRequest = async ({ request }) => {
     return new Response('Missing required fields', { status: 400 });
   }
 
-  let captchaValidated = await verifyCaptcha(token=token, ip=ip);
+  let captchaValidated = await verifyCaptcha(env, token, ip);
 
   if (!captchaValidated) {
     return new Response('Invalid captcha', { status: 403 });
   }
 
-  await sendEmailWithMailgun(name=name, email=email, message=message);
+  await sendEmailWithMailgun(env, name, email, message);
 
   return new Response('Message sent', { status: 200 });
 }
 
-const verifyCaptcha = async ({ env, token, ip }) => {
+const verifyCaptcha = async (env, token, ip) => {
   let formData = new FormData();
   formData.append("secret", env.TURNSTILE_SECRET_KEY);
   formData.append("response", token);
@@ -45,7 +45,7 @@ const verifyCaptcha = async ({ env, token, ip }) => {
   return outcome.success;
 }
 
-const sendEmailWithMailgun = async ({ env, name, email, message }) => {
+const sendEmailWithMailgun = async (env, name, email, message) => {
   let formData = new FormData();
   formData.append("from", env.MAILGUN_FROM);
   // formData.append('h:Reply-To' , email);
