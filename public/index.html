@@ -89,39 +89,41 @@ Dit is een test!
 
       // Function to handle form submission
       function submitForm(event) {
-          event.preventDefault();
-          // Create a FormData object from the form
-          const formData = new FormData(event.target as HTMLFormElement);
+        event.preventDefault();
+        // Create a FormData object from the form
+        const formData = new FormData(event.target);
 
-          // Send the form to the Cloudflare Worker that will listen to requests on the "/submit-contact-form" path
-          fetch("/api/submit", {
-              method: "POST",
-              body: formData,
+        // Send the form to the Cloudflare Worker that will listen to requests on the "/submit-contact-form" path
+        fetch("/api/submit", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            // Parse the response text and include the response status
+            return response.text().then((text) => ({
+              text,
+              ok: response.ok,
+            }));
           })
-              .then((response) => {
-                  // Parse the response text and include the response status
-                  return response.text().then((text) => ({
-                      text,
-                      ok: response.ok,
-                  }));
-              })
-              .then(({ text, ok }) => {
-                  // If the request was successful, disable the form
-                  if (ok) {
-                      // You can modify/add something else here
-                      form.removeEventListener("submit", submitForm);
-                      form.reset();
-                      document.querySelectorAll("input, textarea").forEach((input) => (input.disabled = true));
-                  } else {
-                      // If the request was not successful, throw an error
-                      throw new Error();
-                  }
-              })
-              // Catch any errors that occur during the fetch request
-              .catch(() => {
-          console.log("Error")
-              // You can add something that should happen when the form failed
-              });
+          .then(({ text, ok }) => {
+            // If the request was successful, disable the form
+            if (ok) {
+              // You can modify/add something else here
+              form.removeEventListener("submit", submitForm);
+              form.reset();
+              document
+                .querySelectorAll("input, textarea")
+                .forEach((input) => (input.disabled = true));
+            } else {
+              // If the request was not successful, throw an error
+              throw new Error();
+            }
+          })
+          // Catch any errors that occur during the fetch request
+          .catch(() => {
+            console.log("Error");
+            // You can add something that should happen when the form failed
+          });
       }
     </script>
 
