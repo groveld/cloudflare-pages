@@ -16,6 +16,7 @@ function submitForm(event) {
 
     // Change the button text to "Sending message..."
     submitButton.textContent = "Sending message...";
+    submitButton.className = "btn btn-lg btn-primary disabled";
 
     // Send the form to the Cloudflare Workers API
     fetch("/api/contact", {
@@ -26,17 +27,20 @@ function submitForm(event) {
         if (response.ok) {
             // Change the button text to "Message sent!"
             submitButton.textContent = "Message sent!";
+            submitButton.className = "btn btn-lg btn-success disabled";
             // Reset the form
             contactForm.removeEventListener("submit", submitForm);
             contactForm.reset();
         } else {
             // Change the button text to "Error sending message"
             submitButton.textContent = "Error sending message";
+            submitButton.className = "btn btn-lg btn-danger disabled";
         }
     })
     .catch((error) => {
         // Change the button text to "Error sending message"
         submitButton.textContent = "Error sending message";
+        submitButton.className = "btn btn-lg btn-danger disabled";
     });
 }
 
