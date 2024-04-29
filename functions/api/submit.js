@@ -26,7 +26,7 @@ async function handleRequest({ request, env }) {
     return new Response('Invalid captcha', { status: 403 });
   }
 
-  // await sendEmailWithMailgun(formData);
+  await sendEmailWithMailgun(formData);
 
   return new Response('Message sent', { status: 200 });
 }
