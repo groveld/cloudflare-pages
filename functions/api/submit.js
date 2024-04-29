@@ -47,9 +47,10 @@ async function verifyCaptcha(secret, token, ip) {
 }
 
 async function sendEmailWithMailgun(name, email, message) {
+  let mailgunUrl = 'api.mailgun.net';
   let mailgunDomain = env.MAILGUN_DOMAIN;
   let mailgunApiKey = env.MAILGUN_API_KEY;
-  let url = `https://api.mailgun.net/v3/${mailgunDomain}/messages`;
+  let url = `https://${mailgunUrl}/v3/${mailgunDomain}/messages`;
 
   let formData = new FormData();
   formData.append("from", 'noreply@groveld.com');
