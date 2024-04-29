@@ -20,10 +20,10 @@
     <div class="container py-4">
       <form id="contact-form">
         <div class="mb-3">
-          <label class="form-label" for="i-name">Name</label>
+          <label class="form-label" for="contact-form-name">Full name</label>
           <input
             class="form-control"
-            id="i-name"
+            id="contact-form-name"
             type="text"
             name="name"
             placeholder="Name"
@@ -33,10 +33,12 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="i-email">Email Address</label>
+          <label class="form-label" for="contact-form-email"
+            >Email address</label
+          >
           <input
             class="form-control"
-            id="i-email"
+            id="contact-form-email"
             type="email"
             name="email"
             placeholder="Email Address"
@@ -46,10 +48,10 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="i-subject">Subject</label>
+          <label class="form-label" for="contact-form-subject">Subject</label>
           <input
             class="form-control"
-            id="i-subject"
+            id="contact-form-subject"
             type="text"
             name="subject"
             placeholder="subject"
@@ -59,10 +61,12 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="i-message">Message</label>
+          <label class="form-label" for="contact-form-message"
+            >Your message</label
+          >
           <textarea
             class="form-control"
-            id="i-message"
+            id="contact-form-message"
             rows="5"
             name="message"
             placeholder="Message"
@@ -75,7 +79,13 @@ Dit is een test!
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAAYrFCIgVRhtP95q"></div>
 
         <div class="d-grid">
-          <button class="btn btn-primary btn-lg" type="submit">Submit</button>
+          <button
+            class="btn btn-primary btn-lg"
+            id="contact-form-submit"
+            type="submit"
+          >
+            Submit
+          </button>
         </div>
       </form>
     </div>
@@ -90,10 +100,17 @@ Dit is een test!
       // Function to handle form submission
       function submitForm(event) {
         event.preventDefault();
+
+        // Get the submit button
+        const submitButton = document.getElementById("contact-form-submit");
+
+        // Change the button text to "Sending message..."
+        submitButton.textContent = "Sending message...";
+
         // Create a FormData object from the form
         const formData = new FormData(event.target);
 
-        // Send the form to the Cloudflare Worker that will listen to requests on the "/submit-contact-form" path
+        // Send the form to the Cloudflare Worker that will listen to requests on the "/api/submit" path
         fetch("/api/submit", {
           method: "POST",
           body: formData,
@@ -114,8 +131,11 @@ Dit is een test!
               document
                 .querySelectorAll("input, textarea")
                 .forEach((input) => (input.disabled = true));
+              // Change the button text to "Message sent!"
+              submitButton.textContent = "Message sent!";
             } else {
               // If the request was not successful, throw an error
+              submitButton.textContent = "Something went wrong!";
               throw new Error();
             }
           })
