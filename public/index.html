@@ -101,6 +101,10 @@ Dit is een test!
       function submitForm(event) {
         event.preventDefault();
 
+        document
+          .querySelectorAll("input, textarea, button")
+          .forEach((input) => (input.disabled = true));
+
         // Get the submit button
         const submitButton = document.getElementById("contact-form-submit");
 
@@ -128,9 +132,6 @@ Dit is een test!
               // You can modify/add something else here
               form.removeEventListener("submit", submitForm);
               form.reset();
-              document
-                .querySelectorAll("input, textarea")
-                .forEach((input) => (input.disabled = true));
               // Change the button text to "Message sent!"
               submitButton.textContent = "Message sent!";
             } else {
