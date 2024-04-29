@@ -31,14 +31,13 @@ async function handleRequest({ request }) {
 
 async function verifyCaptcha(token, ip) {
   let formData = new FormData();
-  formData.append("secret", process.env.TURNSTILE_SECRET_KEY);
+  formData.append("secret", TURNSTILE_SECRET_KEY);
   formData.append("response", token);
   formData.append("remoteip", ip);
 
-  let url = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
-  let result = await fetch(url, {
-    body: formData,
+  let result = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
     method: "POST",
+    body: formData,
   });
 
   let outcome = await result.json();
@@ -46,23 +45,17 @@ async function verifyCaptcha(token, ip) {
 }
 
 async function sendEmailWithMailgun(name, email, message) {
-  let mailgunDomain = process.env.MAILGUN_DOMAIN;
-  let mailgunApiKey = process.env.MAILGUN_API_KEY;
-  let mailgunFrom = process.env.MAILGUN_FROM;
-  let mailgunTo = process.env.MAILGUN_TO;
-  let mailgunUrl = `https://api.mailgun.net/v3/${mailgunDomain}/messages`;
-
   let formData = new FormData();
-  formData.append("from", mailgunFrom);
+  formData.append("from", MAILGUN_FROM);
   formData.append('h:Reply-To' , email);
-  formData.append("to", mailgunTo);
+  formData.append("to", MAILGUN_TO);
   formData.append("subject", 'Message from contact form');
   formData.append("text", name + " (" + email + ") says: " + message);
 
-  let result = await fetch(mailgunUrl, {
+  let result = await fetch(`https://api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${btoa(`api:${mailgunApiKey}`)}`,
+      Authorization: `Basic ${btoa(`api:${MAILGUN_API_KEY}`)}`,
     },
     body: formData,
   });
