@@ -13,20 +13,18 @@ async function handleRequest({ request, env }) {
   let name = formData.get('name');
   let email = formData.get('email');
   let message = formData.get('message');
-  // let token = formData.get('cf-turnstile-response');
-  // let ip = request.headers.get('cf-connecting-ip');
-  // let secret = env.TURNSTILE_SECRET_KEY;
+  let token = formData.get('cf-turnstile-response');
+  let ip = request.headers.get('cf-connecting-ip');
 
-  // if (!name || !email || !message) {
-  //   return new Response('Missing required fields', { status: 400 });
-  // }
+  if (!name || !email || !message) {
+    return new Response('Missing required fields', { status: 400 });
+  }
 
-  // let captchaValidated = await verifyCaptcha(secret, token, ip);
-  // let captchaValidated = true;
+  let captchaValidated = await verifyCaptcha(env.TURNSTILE_SECRET_KEY, token, ip);
 
-  // if (!captchaValidated) {
-  //   return new Response('Invalid captcha', { status: 403 });
-  // }
+  if (!captchaValidated) {
+    return new Response('Invalid captcha', { status: 403 });
+  }
 
   // await sendEmailWithMailgun(formData);
 
