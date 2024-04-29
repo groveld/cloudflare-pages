@@ -1,6 +1,8 @@
 export const onRequestPost = async (context) => {
   try {
-    return await handleRequest(context);
+    let variable = process.env.MAILGUN_FROM;
+    return new Response(variable, { status: 200 });
+    // return await handleRequest(context);
   } catch (err) {
     return new Response('Error sending message', { status: 500 });
   }
