@@ -29,9 +29,9 @@ const handleRequest = async ({ request }) => {
   return new Response('Message sent', { status: 200 });
 }
 
-const verifyCaptcha = async (token, ip, TURNSTILE_SECRET_KEY) => {
+const verifyCaptcha = async ({ env }, token, ip) => {
   let formData = new FormData();
-  formData.append("secret", TURNSTILE_SECRET_KEY);
+  formData.append("secret", env.TURNSTILE_SECRET_KEY);
   formData.append("response", token);
   formData.append("remoteip", ip);
 
@@ -45,19 +45,19 @@ const verifyCaptcha = async (token, ip, TURNSTILE_SECRET_KEY) => {
   return outcome.success;
 }
 
-const sendEmailWithMailgun = async (name, email, message, MAILGUN_API_KEY, MAILGUN_DOMAIN, MAILGUN_FROM, MAILGUN_TO) => {
+const sendEmailWithMailgun = async ({ env }, name, email, message) => {
   let formData = new FormData();
-  formData.append("from", MAILGUN_FROM);
+  formData.append("from", env.MAILGUN_FROM);
   // formData.append('h:Reply-To' , email);
-  formData.append("to", MAILGUN_TO);
+  formData.append("to", env.MAILGUN_TO);
   formData.append("subject", 'Message from contact form');
   formData.append("text", name + " (" + email + ") says: " + message);
 
-  let url = `https://api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`;
+  let url = `https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
   let result = await fetch(url, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${btoa(`api:${MAILGUN_API_KEY}`)}`,
+      Authorization: `Basic ${btoa(`api:${env.MAILGUN_API_KEY}`)}`,
     },
     body: formData,
   });
