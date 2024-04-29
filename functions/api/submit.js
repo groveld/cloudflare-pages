@@ -9,7 +9,7 @@ export async function onRequestPost(context) {
 }
 
 async function handleRequest(request) {
-  let formData = await request.formData();
+  // let formData = await request.formData();
   // let name = formData.get('name');
   // let email = formData.get('email');
   // let message = formData.get('message');
@@ -27,7 +27,7 @@ async function handleRequest(request) {
   //   return new Response('Invalid captcha', { status: 403 });
   // }
 
-  await sendEmailWithMailgun(formData);
+  // await sendEmailWithMailgun(formData);
 
   return new Response('Message sent', { status: 200 });
 }
