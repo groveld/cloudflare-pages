@@ -13,8 +13,8 @@ async function handleRequest(request) {
   let name = formData.get('name');
   let email = formData.get('email');
   let message = formData.get('message');
-  let token = formData.get('cf-turnstile-response');
-  let ip = request.headers.get('cf-connecting-ip');
+  // let token = formData.get('cf-turnstile-response');
+  // let ip = request.headers.get('cf-connecting-ip');
 
   if (!name || !email || !message) {
     return new Response('Missing required fields', { status: 400 });
@@ -27,7 +27,7 @@ async function handleRequest(request) {
     return new Response('Invalid captcha', { status: 403 });
   }
 
-  // await sendEmailWithMailgun({ name, email, message });
+  await sendEmailWithMailgun(formData);
 
   return new Response('Message sent', { status: 200 });
 }
@@ -49,5 +49,15 @@ async function verifyCaptcha(token, ip) {
   return outcome.success;
 }
 
-// async function sendEmailWithMailgun(message) {
-// }
+async function sendEmailWithMailgun(formData) {
+  try {
+    let pretty = JSON.stringify([...formData], null, 2);
+    return new Response(pretty, {
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+    });
+  } catch (err) {
+    return new Response('Error parsing JSON content', { status: 400 });
+  }
+}
