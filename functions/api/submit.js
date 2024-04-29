@@ -25,10 +25,7 @@ async function handleRequest({ request, env }) {
     return new Response('Invalid captcha', { status: 403 });
   }
 
-  let mailgunUrl = env.MAILGUN_API_URL;
-  let mailgunDomain = env.MAILGUN_DOMAIN;
-  let mailgunApiKey = env.MAILGUN_API_KEY;
-  await sendEmailWithMailgun(mailgunUrl, mailgunDomain, mailgunApiKey, name, email, message);
+  await sendEmailWithMailgun(name, email, message);
 
   return new Response('Message sent', { status: 200 });
 }
@@ -49,17 +46,24 @@ async function verifyCaptcha(secret, token, ip) {
   return outcome.success;
 }
 
-async function sendEmailWithMailgun(mailgunUrl, mailgunDomain, mailgunApiKey, name, email, message) {
-  let url = `https://${mailgunUrl}/v3/${mailgunDomain}/messages`;
+async function sendEmailWithMailgun({ name, email, message, env }) {
+  let mailgunApiUrl = env.MAILGUN_API_URL;
+  let mailgunDomain = env.MAILGUN_DOMAIN;
+  let mailgunApiKey = env.MAILGUN_API_KEY;
+  let mailgunFromName = env.MAILGUN_FROM_NAME;
+  let mailgunFromAddress = env.MAILGUN_FROM_ADDRESS;
+  let mailgunToName = env.MAILGUN_TO_NAME;
+  let mailgunToAddress = env.MAILGUN_TO_ADDRESS;
+  let mailgunUrl = `https://${mailgunApiUrl}/v3/${mailgunDomain}/messages`;
 
   let formData = new FormData();
-  formData.append("from", name + ' <noreply@groveld.com>');
+  formData.append("from", `${mailgunFromName} <${mailgunFromAddress}>`);
   formData.append('h:Reply-To' , email);
-  formData.append("to", 'Martin Groeneveld <martin@groveld.com>');
+  formData.append("to", `${mailgunToName} <${mailgunToAddress}>`);
   formData.append("subject", 'Message from contact form');
-  formData.append("text", name + ' (' + email + ') says: ' + message);
+  formData.append("text", name + ' <' + email + '><br>' + message);
 
-  let result = await fetch(url, {
+  let result = await fetch(mailgunUrl, {
     method: "POST",
     headers: {
       Authorization: `Basic ${btoa(`api:${mailgunApiKey}`)}`,
