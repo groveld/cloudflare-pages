@@ -29,7 +29,7 @@ async function handleRequest({ request }) {
   return new Response('Message sent', { status: 200 });
 }
 
-async function verifyCaptcha(token, ip, { env }) {
+async function verifyCaptcha({ token, ip, env }) {
   let formData = new FormData();
   formData.append("secret", env.TURNSTILE_SECRET_KEY);
   formData.append("response", token);
@@ -45,7 +45,7 @@ async function verifyCaptcha(token, ip, { env }) {
   return outcome.success;
 }
 
-async function sendEmailWithMailgun(name, email, message, { env }) {
+async function sendEmailWithMailgun({ name, email, message, env }) {
   let mailgunDomain = env.MAILGUN_DOMAIN;
   let mailgunApiKey = env.MAILGUN_API_KEY;
   let mailgunFrom = env.MAILGUN_FROM;
@@ -57,7 +57,7 @@ async function sendEmailWithMailgun(name, email, message, { env }) {
   // formData.append('h:Reply-To' , email);
   formData.append("to", mailgunTo);
   formData.append("subject", 'Message from contact form');
-  formData.append("text", name + ' <' + email + '><br>' + message);
+  formData.append("text", message);
 
   let result = await fetch(mailgunUrl, {
     method: "POST",
