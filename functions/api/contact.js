@@ -48,12 +48,11 @@ const verifyCaptcha = async (env, token, ip) => {
 
 const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   let formData = new FormData();
-  formData.append("from", env.MAILGUN_FROM);
+  // formData.append("from", env.MAILGUN_FROM);
   // formData.append('h:Reply-To' , name + " <" + email + ">");
-  formData.append("to", name + " <" + email + ">");
-  formData.append("bcc", env.MAILGUN_TO);
+  formData.append("to", env.MAILGUN_TO);
   formData.append("subject", subject);
-  formData.append("html", name + " &lt;" + email + "&gt; says:<br><br>" + message);
+  formData.append("html", "<b>" + name + " &lt;" + email + "&gt; says:</b><br><br>" + message);
 
   let url = `https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
   let result = await fetch(url, {

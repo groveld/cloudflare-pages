@@ -14,15 +14,15 @@ function submitForm(event) {
     // Get the form data
     const formData = new FormData(event.target);
 
+    // Change the button text to "Sending message..."
+    submitButton.textContent = "Sending message...";
+
     // Send the form to the Cloudflare Workers API
     fetch("/api/contact", {
         method: "POST",
         body: formData,
     })
     .then((response) => {
-        // Change the button text to "Sending message..."
-        submitButton.textContent = "Sending message...";
-
         if (response.ok) {
             // Change the button text to "Message sent!"
             submitButton.textContent = "Message sent!";
