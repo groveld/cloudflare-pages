@@ -9,19 +9,19 @@ contactForm.addEventListener("submit", submitForm);
 
 // Function to handle form submission event
 function submitForm(event) {
-event.preventDefault();
+    event.preventDefault();
 
-// Change the button text to "Sending message..."
-submitButton.textContent = "Sending message...";
+    // Change the button text to "Sending message..."
+    submitButton.textContent = "Sending message...";
 
-// Get the form data
-const formData = new FormData(event.target);
+    // Get the form data
+    const formData = new FormData(event.target);
 
-// Send the form to the Cloudflare Workers API
-fetch("/api/contact", {
-    method: "POST",
-    body: formData,
-})
+    // Send the form to the Cloudflare Workers API
+    fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+    })
     .then((response) => {
         if (response.ok) {
             // Change the button text to "Message sent!"
