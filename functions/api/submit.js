@@ -10,11 +10,12 @@ const handleRequest = async ({ request, env }) => {
   let formData = await request.formData();
   let name = formData.get('name');
   let email = formData.get('email');
+  let subject = formData.get('subject');
   let message = formData.get('message');
   let token = formData.get('cf-turnstile-response');
   let ip = request.headers.get('cf-connecting-ip');
 
-  if (!name || !email || !message) {
+  if (!name || !email || !subject || !message) {
     return new Response('Missing required fields', { status: 400 });
   }
 
@@ -24,7 +25,7 @@ const handleRequest = async ({ request, env }) => {
     return new Response('Invalid captcha', { status: 403 });
   }
 
-  await sendEmailWithMailgun(env, name, email, message);
+  await sendEmailWithMailgun(env, name, email, subject, message);
 
   return new Response('Message sent', { status: 200 });
 }
@@ -45,13 +46,13 @@ const verifyCaptcha = async (env, token, ip) => {
   return outcome.success;
 }
 
-const sendEmailWithMailgun = async (env, name, email, message) => {
+const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   let formData = new FormData();
   formData.append("from", env.MAILGUN_FROM);
   formData.append('h:Reply-To' , name + " <" + email + ">");
   formData.append("to", env.MAILGUN_TO);
-  formData.append("subject", 'Message from contact form');
-  formData.append("text", name + " (" + email + ") says: " + message);
+  formData.append("subject", subject);
+  formData.append("text", message);
 
   let url = `https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
   let result = await fetch(url, {
