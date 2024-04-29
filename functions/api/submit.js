@@ -25,7 +25,10 @@ async function handleRequest({ request, env }) {
     return new Response('Invalid captcha', { status: 403 });
   }
 
-  await sendEmailWithMailgun(name, email, message);
+  let mailgunUrl = env.MAILGUN_API_URL;
+  let mailgunDomain = env.MAILGUN_DOMAIN;
+  let mailgunApiKey = env.MAILGUN_API_KEY;
+  await sendEmailWithMailgun(mailgunUrl, mailgunDomain, mailgunApiKey, name, email, message);
 
   return new Response('Message sent', { status: 200 });
 }
@@ -46,10 +49,7 @@ async function verifyCaptcha(secret, token, ip) {
   return outcome.success;
 }
 
-async function sendEmailWithMailgun(name, email, message) {
-  let mailgunUrl = 'api.mailgun.net';
-  let mailgunDomain = env.MAILGUN_DOMAIN;
-  let mailgunApiKey = env.MAILGUN_API_KEY;
+async function sendEmailWithMailgun(mailgunUrl, mailgunDomain, mailgunApiKey, name, email, message) {
   let url = `https://${mailgunUrl}/v3/${mailgunDomain}/messages`;
 
   let formData = new FormData();
