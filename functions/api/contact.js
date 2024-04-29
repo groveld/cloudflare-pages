@@ -52,7 +52,7 @@ const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   formData.append('h:Reply-To' , name + " <" + email + ">");
   formData.append("to", env.MAILGUN_TO);
   formData.append("subject", subject);
-  formData.append("html", '<b>Name:</b> ' + name + '\n<b>Email:</b> ' + email + '\n\n' + message);
+  formData.append("html", '<b>Name:</b> ' + name + '<br><b>Email:</b> ' + email + '<br><br>' + message);
 
   let url = `https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
   let result = await fetch(url, {
