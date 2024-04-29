@@ -35,7 +35,8 @@ async function verifyCaptcha(token, ip) {
   formData.append("response", token);
   formData.append("remoteip", ip);
 
-  let result = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+  let url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+  let result = await fetch(url, {
     method: "POST",
     body: formData,
   });
@@ -52,7 +53,8 @@ async function sendEmailWithMailgun(name, email, message) {
   formData.append("subject", 'Message from contact form');
   formData.append("text", name + " (" + email + ") says: " + message);
 
-  let result = await fetch(`https://api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`, {
+  let url = `https://api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`;
+  let result = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Basic ${btoa(`api:${MAILGUN_API_KEY}`)}`,
