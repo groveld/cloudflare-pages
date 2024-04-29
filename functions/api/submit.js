@@ -31,7 +31,7 @@ async function handleRequest({ request }) {
 
 async function verifyCaptcha(token, ip) {
   let formData = new FormData();
-  formData.append("secret", ENV.TURNSTILE_SECRET_KEY);
+  formData.append("secret", process.env.TURNSTILE_SECRET_KEY);
   formData.append("response", token);
   formData.append("remoteip", ip);
 
@@ -46,10 +46,10 @@ async function verifyCaptcha(token, ip) {
 }
 
 async function sendEmailWithMailgun(name, email, message) {
-  let mailgunDomain = ENV.MAILGUN_DOMAIN;
-  let mailgunApiKey = ENV.MAILGUN_API_KEY;
-  let mailgunFrom = ENV.MAILGUN_FROM;
-  let mailgunTo = ENV.MAILGUN_TO;
+  let mailgunDomain = process.env.MAILGUN_DOMAIN;
+  let mailgunApiKey = process.env.MAILGUN_API_KEY;
+  let mailgunFrom = process.env.MAILGUN_FROM;
+  let mailgunTo = process.env.MAILGUN_TO;
   let mailgunUrl = `https://api.mailgun.net/v3/${mailgunDomain}/messages`;
 
   let formData = new FormData();
