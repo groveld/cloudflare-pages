@@ -1,4 +1,4 @@
-export async function onRequestPost(context) {
+export const onRequestPost = async (context) => {
   try {
     return await handleRequest(context);
   } catch (err) {
@@ -6,7 +6,7 @@ export async function onRequestPost(context) {
   }
 }
 
-async function handleRequest({ request }) {
+const handleRequest = async ({ request }) => {
   let formData = await request.formData();
   let name = formData.get('name');
   let email = formData.get('email');
@@ -48,7 +48,7 @@ async function verifyCaptcha(token, ip) {
 async function sendEmailWithMailgun(name, email, message) {
   let formData = new FormData();
   formData.append("from", MAILGUN_FROM);
-  formData.append('h:Reply-To' , email);
+  // formData.append('h:Reply-To' , email);
   formData.append("to", MAILGUN_TO);
   formData.append("subject", 'Message from contact form');
   formData.append("text", name + " (" + email + ") says: " + message);
