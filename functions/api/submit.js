@@ -29,9 +29,9 @@ async function handleRequest({ request }) {
   return new Response('Message sent', { status: 200 });
 }
 
-async function verifyCaptcha({ token, ip, env }) {
+async function verifyCaptcha(token, ip) {
   let formData = new FormData();
-  formData.append("secret", env.TURNSTILE_SECRET_KEY);
+  formData.append("secret", ENV.TURNSTILE_SECRET_KEY);
   formData.append("response", token);
   formData.append("remoteip", ip);
 
@@ -45,19 +45,19 @@ async function verifyCaptcha({ token, ip, env }) {
   return outcome.success;
 }
 
-async function sendEmailWithMailgun({ name, email, message, env }) {
-  let mailgunDomain = env.MAILGUN_DOMAIN;
-  let mailgunApiKey = env.MAILGUN_API_KEY;
-  let mailgunFrom = env.MAILGUN_FROM;
-  let mailgunTo = env.MAILGUN_TO;
+async function sendEmailWithMailgun(name, email, message) {
+  let mailgunDomain = ENV.MAILGUN_DOMAIN;
+  let mailgunApiKey = ENV.MAILGUN_API_KEY;
+  let mailgunFrom = ENV.MAILGUN_FROM;
+  let mailgunTo = ENV.MAILGUN_TO;
   let mailgunUrl = `https://api.mailgun.net/v3/${mailgunDomain}/messages`;
 
   let formData = new FormData();
   formData.append("from", mailgunFrom);
-  // formData.append('h:Reply-To' , email);
+  formData.append('h:Reply-To' , email);
   formData.append("to", mailgunTo);
   formData.append("subject", 'Message from contact form');
-  formData.append("text", message);
+  formData.append("text", name + " (" + email + ") says: " + message);
 
   let result = await fetch(mailgunUrl, {
     method: "POST",
