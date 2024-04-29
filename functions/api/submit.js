@@ -53,8 +53,8 @@ async function sendEmailWithMailgun(mailgunUrl, mailgunDomain, mailgunApiKey, na
   let url = `https://${mailgunUrl}/v3/${mailgunDomain}/messages`;
 
   let formData = new FormData();
-  formData.append("from", name + ' <' + email + '>');
-  formData.append("reply-to", email);
+  formData.append("from", name + ' <noreply@groveld.com>');
+  formData.append('h:Reply-To' , email);
   formData.append("to", 'Martin Groeneveld <martin@groveld.com>');
   formData.append("subject", 'Message from contact form');
   formData.append("text", name + ' (' + email + ') says: ' + message);
