@@ -1,5 +1,3 @@
-// POST /api/submit
-
 export async function onRequestPost(context) {
   try {
     return await handleRequest(context);
@@ -20,13 +18,14 @@ async function handleRequest({ request, env }) {
     return new Response('Missing required fields', { status: 400 });
   }
 
-  let captchaValidated = await verifyCaptcha(env.TURNSTILE_SECRET_KEY, token, ip);
+  let turnstileSecret = env.TURNSTILE_SECRET_KEY;
+  let captchaValidated = await verifyCaptcha(turnstileSecret, token, ip);
 
   if (!captchaValidated) {
     return new Response('Invalid captcha', { status: 403 });
   }
 
-  await sendEmailWithMailgun(formData);
+  await sendEmailWithMailgun();
 
   return new Response('Message sent', { status: 200 });
 }
@@ -47,14 +46,9 @@ async function verifyCaptcha(secret, token, ip) {
   return outcome.success;
 }
 
-async function sendEmailWithMailgun(formData) {
+async function sendEmailWithMailgun() {
   try {
-    let pretty = JSON.stringify([...formData], null, 2);
-    return new Response(pretty, {
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-    });
+    return new Response('Mailgun sent', { status: 200 });
   } catch (err) {
     return new Response('Error parsing JSON content', { status: 400 });
   }
