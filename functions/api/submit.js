@@ -10,22 +10,22 @@ export async function onRequestPost(context) {
 
 async function handleRequest(request) {
   let formData = await request.formData();
-  let name = formData.get('name');
-  let email = formData.get('email');
-  let message = formData.get('message');
+  // let name = formData.get('name');
+  // let email = formData.get('email');
+  // let message = formData.get('message');
   // let token = formData.get('cf-turnstile-response');
   // let ip = request.headers.get('cf-connecting-ip');
 
-  if (!name || !email || !message) {
-    return new Response('Missing required fields', { status: 400 });
-  }
+  // if (!name || !email || !message) {
+  //   return new Response('Missing required fields', { status: 400 });
+  // }
 
   // let captchaValidated = await verifyCaptcha(token, ip);
-  let captchaValidated = true;
+  // let captchaValidated = true;
 
-  if (!captchaValidated) {
-    return new Response('Invalid captcha', { status: 403 });
-  }
+  // if (!captchaValidated) {
+  //   return new Response('Invalid captcha', { status: 403 });
+  // }
 
   await sendEmailWithMailgun(formData);
 
