@@ -1,5 +1,8 @@
 export const onRequestPost = async (context) => {
   try {
+    if (context.request.method === 'GET') {
+      return Response.redirect('/', 301);
+    }
     return await handleRequest(context);
   } catch (err) {
     return new Response('Error sending message', { status: 500 });
