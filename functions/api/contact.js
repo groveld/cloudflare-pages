@@ -27,7 +27,7 @@ const handleRequest = async ({ request, env }) => {
 
   await sendEmailWithMailgun(env, name, email, subject, message);
 
-  return new Response('Message sent', { status: 200 });
+  return new Response('Message sent!', { status: 200 });
 }
 
 const verifyCaptcha = async (env, token, ip) => {

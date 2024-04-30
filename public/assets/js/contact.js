@@ -27,22 +27,20 @@ function submitForm(event) {
         method: "POST",
         body: formData,
     })
-    .then((response) => {
-        if (response.ok) {
-            // Change the button text to "Message sent!"
-            submitButton.textContent = "Message sent!";
+    // Parse the response as JSON
+    .then((response) => response.json())
+    .then((data) => {
+        if (data.success) {
+            submitButton.textContent = data.message;
             submitButton.className = "btn btn-lg btn-success disabled";
-            // Reset the form
             contactForm.removeEventListener("submit", submitForm);
             contactForm.reset();
         } else {
-            // Change the button text to "Error sending message"
-            submitButton.textContent = "Error sending message";
+            submitButton.textContent = data.message;
             submitButton.className = "btn btn-lg btn-danger disabled";
         }
     })
     .catch((error) => {
-        // Change the button text to "Error sending message"
         submitButton.textContent = "Error sending message";
         submitButton.className = "btn btn-lg btn-danger disabled";
     });
