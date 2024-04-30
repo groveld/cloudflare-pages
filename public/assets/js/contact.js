@@ -14,6 +14,7 @@ function submitForm(event) {
     // Get the form data
     const formData = new FormData(event.target);
 
+    // Disable all form elements
     document
     .querySelectorAll("input, textarea")
     .forEach((input) => (input.disabled = true));
@@ -27,16 +28,14 @@ function submitForm(event) {
         method: "POST",
         body: formData,
     })
-    // Parse the response as JSON
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.success) {
-            submitButton.textContent = data.message;
+    .then((response) => {
+        if (response.ok) {
+            submitButton.textContent = "Message sent!";
             submitButton.className = "btn btn-lg btn-success disabled";
             contactForm.removeEventListener("submit", submitForm);
             contactForm.reset();
         } else {
-            submitButton.textContent = data.message;
+            submitButton.textContent = "Error sending message";
             submitButton.className = "btn btn-lg btn-danger disabled";
         }
     })
