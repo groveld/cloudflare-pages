@@ -51,7 +51,7 @@ const validateToken = async (env, token, ip) => {
   };
 
   const response = await sendRequest(url, options);
-  return response.success;
+  return response.success; // Returns true or false
 }
 
 const sendEmailWithMailgun = async (env, name, email, subject, message) => {
@@ -72,5 +72,5 @@ const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   };
 
   const response = await sendRequest(url, options);
-  return response.message === 'Queued. Thank you.';
+  return response.message === 'Queued. Thank you.'; // Returns true or false
 }
