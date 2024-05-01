@@ -12,10 +12,11 @@ const sanitizeInput = (input) => {
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    "'": '&#039;'
+    "'": '&#039;',
+    '\n': '<br>'
   };
 
-  return String(input).replace(/[&<>"']/g, (m) => map[m]);
+  return String(input).replace(/[&<>"'\n]/g, (m) => map[m]);
 }
 
 const jsonResponse = (data, status = 200) => {
