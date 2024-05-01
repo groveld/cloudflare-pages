@@ -6,30 +6,55 @@ export const onRequestPost = async (context) => {
   }
 }
 
+const sanitizeInput = (input) => {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+
+  return String(input).replace(/[&<>"']/g, (m) => map[m]);
+}
+
+const jsonResponse = (data, status = 200) => {
+  return new Response(JSON.stringify(data), {
+    status: status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
 const handleRequest = async ({ request, env }) => {
   let formData = await request.formData();
-  let name = formData.get('name');
-  let email = formData.get('email');
-  let subject = formData.get('subject');
-  let message = formData.get('message');
-  let token = formData.get('cf-turnstile-response');
+  let sanitizedData = new FormData();
+
+  for (let [key, value] of formData.entries()) {
+    sanitizedData.append(key, sanitizeInput(value));
+  }
+
+  let name = sanitizedData.get('name');
+  let email = sanitizedData.get('email');
+  let subject = sanitizedData.get('subject');
+  let message = sanitizedData.get('message');
+  let token = sanitizedData.get('cf-turnstile-response');
   let ip = request.headers.get('CF-Connecting-IP');
 
   if (!name || !email || !subject || !message) {
-    return new Response('Missing required fields', { status: 400 });
+    return jsonResponse({ message: 'Missing required fields' }, 400);
   }
 
   const isTokenValid = await validateToken(env, token, ip);
   if (!isTokenValid) {
-    return new Response('Invalid token', { status: 403 });
+    return jsonResponse({ message: 'Invalid token' }, 403);
   }
 
   const isEmailSent = await sendEmailWithMailgun(env, name, email, subject, message);
   if (!isEmailSent) {
-    return new Response('Error sending message', { status: 500 });
+    return jsonResponse({ message: 'Error sending message' }, 500);
   }
 
-  return new Response('Message sent successfully', { status: 200 });
+  return jsonResponse({ message: 'Message sent successfully' }, 200);
 }
 
 const sendRequest = async (url, options) => {
@@ -57,10 +82,10 @@ const validateToken = async (env, token, ip) => {
 const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   const formData = new FormData();
   formData.append("from", env.MAILGUN_FROM);
-  formData.append('h:Reply-To' , name + " <" + email + ">");
   formData.append("to", env.MAILGUN_TO);
   formData.append("subject", "New message from " + name);
-  formData.append("html", "<b>From:</b><br>" + name + "<br><br><b>Email:</b><br>" + email + "<br><br><b>Subject:</b><br>" + subject + "<br><br><b>Message:</b><br>" + message);
+  formData.append('h:Reply-To' , name + " <" + email + ">");
+  formData.append("html", "<b>From:</b><br>" + name + " &lt;" + email + "&gt;<br><br><b>Subject:</b><br>" + subject + "<br><br><b>Message:</b><br>" + message);
 
   const url = `https://${env.MAILGUN_BASE_URL}/v3/${env.MAILGUN_DOMAIN}/messages`;
   const options = {

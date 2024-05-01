@@ -11,10 +11,6 @@ const submitForm = async (event) => {
     // Get the contactForm data
     const formData = new FormData(event.target);
 
-    // Get the message field and replace newline characters with <br> tags
-    const message = formData.get('message').replace(/\n/g, '<br>');
-    formData.set('message', message);
-
     // Disable all contactForm elements
     contactForm.querySelectorAll("input, textarea")
     .forEach((input) => (input.disabled = true));
@@ -30,8 +26,8 @@ const submitForm = async (event) => {
             body: formData,
         });
 
-        const text = await response.text();
-        submitButton.textContent = text;
+        const data = await response.json();
+        submitButton.textContent = data.message;
 
         if (response.ok) {
             submitButton.className = "btn btn-lg btn-success disabled";
