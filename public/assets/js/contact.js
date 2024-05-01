@@ -7,6 +7,10 @@ const submitButton = contactForm.querySelector("button[type=submit]");
 // Get the textarea element
 const messageField = contactForm.querySelector("textarea");
 
+// Set the CSS for the textarea
+messageField.style.boxSizing = "border-box";
+messageField.style.overflow = "hidden";
+
 // Function to handle form submission event
 const submitForm = async (event) => {
     event.preventDefault();
