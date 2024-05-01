@@ -19,18 +19,18 @@ const handleRequest = async ({ request, env }) => {
     return new Response('Missing required fields', { status: 400 });
   }
 
-  let captchaValidated = await verifyCaptcha(env, token, ip);
+  let validatedToken = await validateToken(env, token, ip);
 
-  if (!captchaValidated) {
-    return new Response('Invalid captcha', { status: 403 });
+  if (!validatedToken) {
+    return new Response('Invalid token', { status: 403 });
   }
 
   await sendEmailWithMailgun(env, name, email, subject, message);
 
-  return new Response('Message sent!', { status: 200 });
+  return new Response('Message sent', { status: 200 });
 }
 
-const verifyCaptcha = async (env, token, ip) => {
+const validateToken = async (env, token, ip) => {
   let formData = new FormData();
   formData.append("secret", env.TURNSTILE_SECRET_KEY);
   formData.append("response", token);
@@ -43,7 +43,6 @@ const verifyCaptcha = async (env, token, ip) => {
   });
 
   let outcome = await result.json();
-  console.log("Captcha outcome: ", outcome);
   return outcome.success;
 }
 
@@ -52,8 +51,8 @@ const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   formData.append("from", env.MAILGUN_FROM);
   formData.append('h:Reply-To' , name + " <" + email + ">");
   formData.append("to", env.MAILGUN_TO);
-  formData.append("subject", subject);
-  formData.append("html", "<bold>From:</bold><br>" + name + "<br><br><bold>Email:</bold><br>" + email + "<br><br><bold>Message:</bold><br>" + message);
+  formData.append("subject", "New message from " + name + " - " + subject);
+  formData.append("html", "<b>From:</b><br>" + name + "<br><br><b>Email:</b><br>" + email + "<br><br><b>Subject:</b><br>" + subject + "<br><br><b>Message:</b><br>" + message);
 
   let url = `https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
   let result = await fetch(url, {
@@ -65,6 +64,5 @@ const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   });
 
   let outcome = await result.json();
-  console.log("Mailgun outcome: ", outcome);
   return outcome.success;
 }
