@@ -72,5 +72,5 @@ const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   };
 
   const response = await sendRequest(url, options);
-  return response.ok;
+  return response.message === 'Queued. Thank you.';
 }
