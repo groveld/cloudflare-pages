@@ -29,11 +29,15 @@ function submitForm(event) {
     })
     .then((response) => {
         if (response.ok) {
-            submitButton.textContent = response.text();
-            submitButton.className = "btn btn-lg btn-success disabled";
+            response.text().then((text) => {
+                submitButton.textContent = text;
+                submitButton.className = "btn btn-lg btn-success disabled";
+            });
         } else {
-            submitButton.textContent = response.text();
-            submitButton.className = "btn btn-lg btn-danger disabled";
+            response.text().then((text) => {
+                submitButton.textContent = text;
+                submitButton.className = "btn btn-lg btn-danger disabled";
+            });
         }
     });
 }
