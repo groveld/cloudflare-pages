@@ -4,6 +4,9 @@ const contactForm = document.getElementById("contact-form");
 // Get the submit button
 const submitButton = contactForm.querySelector("button[type=submit]");
 
+// Get the textarea element
+const messageField = contactForm.querySelector("textarea");
+
 // Function to handle form submission event
 const submitForm = async (event) => {
     event.preventDefault();
@@ -40,5 +43,14 @@ const submitForm = async (event) => {
     }
 }
 
+// Function to resize the textarea
+const resizeTextarea = (event) => {
+    event.target.style.height = 'auto';
+    event.target.style.height = event.target.scrollHeight + 'px';
+};
+
 // Add an event listener to the form element
 contactForm.addEventListener("submit", submitForm);
+
+// Add an event listener to the textarea
+messageField.addEventListener('input', resizeTextarea);
