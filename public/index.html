@@ -40,6 +40,7 @@
             type="email"
             name="email"
             placeholder="Your email address"
+            minlength="3"
             required
           />
         </div>
@@ -52,6 +53,7 @@
             type="text"
             name="subject"
             placeholder="The subject of your message"
+            minlength="5"
             required
           />
         </div>
@@ -61,9 +63,10 @@
           <textarea
             class="form-control"
             id="contact-form-message"
-            rows="5"
             name="message"
             placeholder="Your message"
+            rows="5"
+            minlength="20"
             required
           ></textarea>
         </div>
