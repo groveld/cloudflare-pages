@@ -13,7 +13,7 @@ const handleRequest = async ({ request, env }) => {
   let subject = formData.get('subject');
   let message = formData.get('message');
   let token = formData.get('cf-turnstile-response');
-  let ip = request.headers.get('cf-connecting-ip');
+  let ip = request.headers.get('CF-Connecting-IP');
 
   if (!name || !email || !subject || !message) {
     return new Response('Missing required fields', { status: 400 });
@@ -43,7 +43,7 @@ const validateToken = async (env, token, ip) => {
   });
 
   let outcome = await result.json();
-  return outcome.success;
+  return outcome.success; // true or false
 }
 
 const sendEmailWithMailgun = async (env, name, email, subject, message) => {
@@ -64,5 +64,5 @@ const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   });
 
   let outcome = await result.json();
-  return outcome.success;
+  return outcome.status === 200; // true or false
 }
