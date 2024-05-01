@@ -2,7 +2,7 @@
 const contactForm = document.getElementById("contact-form");
 
 // Get the submit button
-const submitButton = document.getElementById("contact-form-submit");
+const submitButton = contactForm.querySelector("button[type=submit]");
 
 // Add an event listener to the form element
 contactForm.addEventListener("submit", submitForm);
@@ -11,12 +11,11 @@ contactForm.addEventListener("submit", submitForm);
 function submitForm(event) {
     event.preventDefault();
 
-    // Get the form data
+    // Get the contactForm data
     const formData = new FormData(event.target);
 
-    // Disable all form elements
-    document
-    .querySelectorAll("input, textarea")
+    // Disable all contactForm elements
+    contactForm.querySelectorAll("input, textarea")
     .forEach((input) => (input.disabled = true));
 
     // Change the button text to "Sending message..."
@@ -28,21 +27,14 @@ function submitForm(event) {
         method: "POST",
         body: formData,
     })
-    .then((response.te
+    .then((response) => response.text())
     .then((response) => {
         if (response.ok) {
-            submitButton.textContent = "Message sent!";
+            submitButton.textContent = response.text();
             submitButton.className = "btn btn-lg btn-success disabled";
-            contactForm.removeEventListener("submit", submitForm);
-            // contactForm.reset();
         } else {
-            submitButton.textContent = "Error sending message";
+            submitButton.textContent = response.text();
             submitButton.className = "btn btn-lg btn-danger disabled";
         }
-    })
-    .catch((error) => {
-        submitButton.textContent = "Error sending message";
-        submitButton.className = "btn btn-lg btn-danger disabled";
     });
 }
-
