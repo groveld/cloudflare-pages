@@ -27,7 +27,6 @@ function submitForm(event) {
         method: "POST",
         body: formData,
     })
-    .then((response) => response.text())
     .then((response) => {
         if (response.ok) {
             submitButton.textContent = response.text();
