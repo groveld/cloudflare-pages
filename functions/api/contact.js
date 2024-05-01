@@ -1,8 +1,5 @@
 export const onRequestPost = async (context) => {
   try {
-    if (context.request.method === 'GET') {
-      return Response.redirect('/', 301);
-    }
     return await handleRequest(context);
   } catch (err) {
     return new Response('Error sending message', { status: 500 });
@@ -46,6 +43,7 @@ const verifyCaptcha = async (env, token, ip) => {
   });
 
   let outcome = await result.json();
+  console.log("Captcha outcome: ", outcome);
   return outcome.success;
 }
 
@@ -55,7 +53,7 @@ const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   formData.append('h:Reply-To' , name + " <" + email + ">");
   formData.append("to", env.MAILGUN_TO);
   formData.append("subject", subject);
-  formData.append("html", name + " &lt;" + email + "&gt; says:<br><br>" + message);
+  formData.append("html", "<bold>From:</bold><br>" + name + "<br><br><bold>Email:</bold><br>" + email + "<br><br><bold>Message:</bold><br>" + message);
 
   let url = `https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
   let result = await fetch(url, {
@@ -67,5 +65,6 @@ const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   });
 
   let outcome = await result.json();
+  console.log("Mailgun outcome: ", outcome);
   return outcome.success;
 }
