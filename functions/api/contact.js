@@ -83,11 +83,10 @@ const validateToken = async (env, token, ip) => {
 const sendEmailWithMailgun = async (env, name, email, subject, message) => {
   const formData = new FormData();
   formData.append("from", env.MAILGUN_FROM);
-  // formData.append("from", "noreply@groveld.com");
   formData.append("h:Sender", env.MAILGUN_FROM);
   formData.append("to", env.MAILGUN_TO);
+  formData.append('h:Reply-To' , name + " <" + email + ">");
   formData.append("subject", name + " - " + subject);
-  // formData.append('h:Reply-To' , name + " <" + email + ">");
   formData.append("html", "<b>" + name + "</b><br>" + email + "<br><br><b>" + subject + "</b><br><br>" + message);
 
   const url = `https://${env.MAILGUN_BASE_URL}/v3/${env.MAILGUN_DOMAIN}/messages`;
