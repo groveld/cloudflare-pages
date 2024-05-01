@@ -28,12 +28,13 @@ function submitForm(event) {
         method: "POST",
         body: formData,
     })
+    .then((response.te
     .then((response) => {
         if (response.ok) {
             submitButton.textContent = "Message sent!";
             submitButton.className = "btn btn-lg btn-success disabled";
             contactForm.removeEventListener("submit", submitForm);
-            contactForm.reset();
+            // contactForm.reset();
         } else {
             submitButton.textContent = "Error sending message";
             submitButton.className = "btn btn-lg btn-danger disabled";
