@@ -48,7 +48,7 @@ const submitForm = async (event) => {
 }
 
 // Function to resize the textarea
-const resizeTextarea = (event) => {
+const resizeMessageField = (event) => {
     event.target.style.height = 'auto';
     event.target.style.height = event.target.scrollHeight + 'px';
 };
@@ -57,4 +57,4 @@ const resizeTextarea = (event) => {
 contactForm.addEventListener("submit", submitForm);
 
 // Add an event listener to the textarea
-messageField.addEventListener('input', resizeTextarea);
+messageField.addEventListener('input', resizeMessageField);
